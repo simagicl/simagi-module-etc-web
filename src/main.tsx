@@ -4,6 +4,8 @@ import SimagiEtcModule from './simagi-etc-module.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SimagiEtcModule userId="" apiUrl="" authToken="" />
+    <div className="container mx-auto my-20">
+      <SimagiEtcModule />
+    </div>
   </StrictMode>,
 )

@@ -1,13 +1,21 @@
-import type { AppProps } from './interfaces/app.inteface'
-
 import './simagi-etc-module.css'
+import { MainLayout } from './components/layouts/MainLayout'
+import { TitleBreadcrumb } from './components/ui/titleBreadcrumb/TitleBreadcrumb'
+import { EvaluacionList } from './components/EvaluacionList/EvaluacionList'
 
-export const SimagiEtcModule = (props: AppProps) => {
+export const SimagiEtcModule = () => {
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h1 className="text-2xl font-bold">Simagi Etc Module</h1>
-            {props.userId}
-        </div>
+        <MainLayout>
+            <TitleBreadcrumb items={[
+                { label: "Home", href: "/" },
+                { label: "Evaluaciones", href: "/evaluaciones" },
+            ]} />
+            
+            <EvaluacionList title="Evaluaciones" />
+
+
+
+        </MainLayout>
     )
 }
 
