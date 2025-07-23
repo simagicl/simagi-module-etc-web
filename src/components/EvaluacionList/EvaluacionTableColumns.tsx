@@ -22,15 +22,15 @@ export function getEvaluacionColumns({ onEdit, onDelete }: EvaluacionColumnsPara
     },
     {
       accessorKey: "sup_terreno",
-      header: "Superficie Terreno",
+      header: "Superficie Terreno [m2]",
     },
     {
       accessorKey: "sup_construida",
-      header: "Superficie Construida",
+      header: "Superficie Construida [m2]",
     },
     {
       accessorKey: "valor_terreno",
-      header: "Valor Terreno",
+      header: "Valor Terreno [UF]",
     },
     {
       header: "Acciones",
