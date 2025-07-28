@@ -5,7 +5,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  type ColumnFiltersState,
   useReactTable,
 } from "@tanstack/react-table"
 
@@ -18,68 +17,45 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { Input } from "@/components/ui/input"
-import { useState } from "react"
-import { Label } from "@radix-ui/react-label"
 import { Button } from "@/components/ui/button"
-
-import emptySearch from "@/assets/search-empty.png";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  filterColumnName: string | undefined
   handleAdd?: () => void
-  handleEdit?: (data: any) => void
+  handleEdit?: (data: TData) => void
   handleDelete?: (id: number) => void  
+  pagination?: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filterColumnName,
   handleAdd,
-}: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-    []
-  )
+  pagination = false }: DataTableProps<TData, TValue>) {
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      columnFilters,
       columnVisibility: {
         id: false,
       }
-    },
+    }
   })
 
   return (
-    <div className=" p-4 rounded-md shadow-lg border border-gray-200">
-      <div className="flex items-center py-4 gap-2">
-        <Label className="mr-2 text-sm" htmlFor={filterColumnName || ""}>Buscar: </Label>
-        <Input
-          placeholder={`Buscar por ${filterColumnName || "..."}`}
-          value={(table.getColumn(filterColumnName || "")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterColumnName || "")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm border border-gray-200"
-        />
-        <Button variant="outline" className="sm-bg-btn-primary sm-btn-rounded text-white" onClick={handleAdd}>Nuevo</Button>
-      </div>
-      <div className="rounded-md border border-gray-200">
-        <Table>
+    <div>      
+      <div>
+        <Table className="border border-gray-200">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border border-gray-200 sm-bg-gray">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-center bg-gray-200">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -94,13 +70,15 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="text-center border border-gray-200"
+                  style={{ backgroundColor: index % 2 !== 0 ? "#f5f5f5" : "#fff" }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-center border-y border-gray-200">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -109,10 +87,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                    <div className="flex flex-col items-center justify-center">
-                        <img className="w-24 h-24" src={emptySearch} alt="No se encontraron resultados" />
-                        <p className="text-sm text-gray-500">Lo siento, no pude encontrar lo que buscabas.</p>
-                    </div>
+                  Lo siento, no pude encontrar lo que buscabas.
                 </TableCell>
               </TableRow>
             )}
@@ -121,22 +96,31 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-center space-x-2 py-4">
         <Button
-          className="sm-btn-rounded"          
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
+            className="sm-btn-rounded sm-bg-btn-primary text-white"
+            size="sm"
+            onClick={handleAdd}
+          >Agregar</Button>
+      </div>
+      {pagination && (
+      <div className="flex items-center justify-center space-x-2 py-4">
+        <Button
+            className="sm-btn-rounded sm-bg-btn-primary text-white"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
           Anterior
         </Button>
         <Button
-          className="sm-btn-rounded"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
+            className="sm-btn-rounded sm-bg-btn-primary text-white"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
           Siguiente
         </Button>
       </div>
+    )}
     </div>
   )
 }

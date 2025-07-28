@@ -1,3 +1,4 @@
+import { useState } from "react";
 
 interface TitleBreadcrumbProps {
     textClassName?: string;
@@ -8,13 +9,14 @@ interface TitleBreadcrumbProps {
 }
 
 export const TitleBreadcrumb = ({ textClassName, items }: TitleBreadcrumbProps) => {
+    const [currentItems, setCurrentItems] = useState(items);
     return (
         <div className="flex items-center justify-between">
             <ul className="flex items-center gap-2">
-                {items.map((item, index) => (
+                {currentItems.map((item, index) => (
                     <li key={index}>
                         <a href={item.href} className={textClassName}>{item.label}</a>
-                        {index < items.length - 1 && (
+                        {index < currentItems.length - 1 && (
                             <span className="text-gray-500"> /</span>
                         )}
                     </li>

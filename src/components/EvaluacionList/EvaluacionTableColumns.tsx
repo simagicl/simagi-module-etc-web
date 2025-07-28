@@ -39,13 +39,13 @@ export function getEvaluacionColumns({ onEdit, onDelete }: EvaluacionColumnsPara
         <div className="flex gap-2">
           <Button
             onClick={() => onEdit(row.original)}
-            className="bg-yellow-500 text-white px-2 py-1 rounded"
+            className="sm-btn-rounded bg-yellow-500 text-white px-2 py-1 "
           >
             Editar
           </Button>
           <Button
             onClick={() => onDelete(row.original.id)}
-            className="bg-red-500 text-white px-2 py-1 rounded"
+            className="sm-btn-rounded bg-red-500 text-white px-2 py-1 "
           >
             Eliminar
           </Button>
