@@ -51,6 +51,20 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
             ...evaluacionData,
             items: [...evaluacionData.items, newItem]
         })
+        setHasChanged(true)
+    }
+
+    const handleEditItem = (item: IEvaluacionItem) => {
+        console.log("editando item", item)
+        setHasChanged(true)
+    }
+
+    const handleDeleteItem = (item: IEvaluacionItem) => {
+        setEvaluacionData({
+            ...evaluacionData,
+            items: evaluacionData.items.filter((i) => i.id !== item.id)
+        })
+        setHasChanged(true)
     }
     
     return (
@@ -120,7 +134,7 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
                                     <div className="flex flex-col gap-2">
                                         <div className="flex flex-col gap-1">
                                             { evaluacionData.items.map((item, index) => (
-                                                <EvaluacionItem key={index} item={item} tipologias={tipologias}/>
+                                                <EvaluacionItem key={index} item={item} tipologias={tipologias} handleEditItem={(item) => handleEditItem(item)} handleDeleteItem={(item) => handleDeleteItem(item)}/>
                                             ))}
                                         </div>  
                                         <Button className="sm-btn-rounded sm-bg-green-1 text-white" onClick={() => handleAddItem()}>Agregar Item</Button>
