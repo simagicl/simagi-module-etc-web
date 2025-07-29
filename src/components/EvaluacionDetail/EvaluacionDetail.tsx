@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import type { IEvaluacion, IResumenTipologia } from "@/interfaces/evaluacion.interface"
+import type { IEvaluacion, IEvaluacionItem, IResumenTipologia } from "@/interfaces/evaluacion.interface"
 import { Button } from "@/components/ui/button"
 import { CardItem } from "./CardItem"
 import { EvaluacionItem } from "./Item"
@@ -36,6 +36,21 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
     const handleSave = () => {
         console.log("evaluacionData", evaluacionData)
         onExit?.()
+    }
+
+    const handleAddItem = () => {
+        const newItem: IEvaluacionItem = {
+            id: evaluacionData.items.length + 1,
+            orden: evaluacionData.items.length + 1,
+            identificador: "",
+            centroCosto: "",
+            unidad: "",
+            subItems: []
+        }
+        setEvaluacionData({
+            ...evaluacionData,
+            items: [...evaluacionData.items, newItem]
+        })
     }
     
     return (
@@ -108,13 +123,13 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
                                                 <EvaluacionItem key={index} item={item} tipologias={tipologias}/>
                                             ))}
                                         </div>  
-                                        <Button className="sm-btn-rounded sm-bg-green-1 text-white" onClick={() => {}}>Agregar Item</Button>
+                                        <Button className="sm-btn-rounded sm-bg-green-1 text-white" onClick={() => handleAddItem()}>Agregar Item</Button>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col gap-2 items-center justify-center border-1 border-gray-200 p-4 rounded-lg min-h-96">
                                         <img className="w-24 h-24" src={emptySearch} alt="No se encontraron resultados" />
                                         <p className="text-sm text-gray-500">No hay items, agrega al menos uno</p>
-                                        <Button className="sm-btn-rounded sm-bg-green-1 text-white" onClick={() => {}}>Agregar Item</Button>
+                                        <Button className="sm-btn-rounded sm-bg-green-1 text-white" onClick={() => handleAddItem()}>Agregar Item</Button>
                                     </div>
                                 )}
                             </TabsContent>
