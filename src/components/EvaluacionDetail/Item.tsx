@@ -58,9 +58,11 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
             setModalOpen(false);
           }} data={itemData} />
             <div className="flex justify-between sm-bg-cyan py-1 px-4 rounded-t-lg text-white">
-                <Button className="sm-btn-rounded sm-bg-btn-primary" onClick={() => setOpen(!open)}>
+                <div className="flex items-center">
+                <Button className="bg-teal-500" onClick={() => setOpen(!open)}>
                     {open ? <MinusIcon className="h-4 w-4" /> : <PlusIcon className="h-4 w-4" />}
                 </Button>
+                </div>
                 <div>
                     <p className="text-sm font-bold text-center py-0">Identificador</p>
                     <p className="text-sm text-center py-0">{itemData.identificador}</p>
@@ -90,11 +92,11 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
                     <p className="text-sm font-bold text-center py-0">Subtotal</p>
                     <p className="text-sm text-center py-0">{itemData.subItems.reduce((total, subItem) => total + subItem.tipologias.reduce((totalTipologia, tipologia) => totalTipologia + tipologia.valor, 0), 0)} {itemData.unidad}</p>                
                 </div>
-                <div className="flex flex-row gap-1">
-                  <Button className="sm-btn-rounded bg-amber-400" onClick={() => setModalOpen(true)}>
+                <div className="flex items-center flex-row gap-1">
+                  <Button className="bg-amber-400" onClick={() => setModalOpen(true)}>
                     <PencilIcon className="h-4 w-4" />
                   </Button>
-                  <Button className="sm-btn-rounded bg-red-400" onClick={() => onDeleteItem(itemData)}>
+                  <Button className="bg-red-400" onClick={() => onDeleteItem(itemData)}>
                     <TrashIcon className="h-4 w-4" />
                   </Button>
                 </div>
