@@ -1,10 +1,10 @@
 export interface IEvaluacion {
     id: number;
     nombre: string;
-    proceso_id: number;
-    sup_terreno: number;
-    sup_construida: number;
-    valor_terreno: number;
+    procesoId: number;
+    supTerreno: number;
+    supConstruida: number;
+    valorTerreno: number;
     tipologias: IResumenTipologia[];
     items: IEvaluacionItem[];
 }

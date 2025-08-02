@@ -29,8 +29,7 @@ export const evaluacionMock: IEvaluacion = {
             orden: 1,
             identificador: "A",
             centroCosto: "Centro Costo 1",
-            unidad: "m2",
-            
+            unidad: "m2",            
             subItems: [
                 {
                     id: 1,

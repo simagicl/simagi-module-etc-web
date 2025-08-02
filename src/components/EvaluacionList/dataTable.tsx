@@ -60,16 +60,18 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className=" p-4 rounded-md shadow-lg bg-gray-100">
-      <div className="flex items-center py-4 gap-2">
-        <Label className="mr-2 text-sm" htmlFor={filterColumnName || ""}>Buscar: </Label>
-        <Input
-          placeholder={`Buscar por ${filterColumnName || "..."}`}
-          value={(table.getColumn(filterColumnName || "")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterColumnName || "")?.setFilterValue(event.target.value)
+      <div className="flex items-center py-4 px-1 gap-2 justify-between">
+        <div className="flex items-center gap-2">
+          <Label className="mr-2 text-sm" htmlFor={filterColumnName || ""}>Buscar: </Label>
+          <Input
+            placeholder={`Buscar por ${filterColumnName || "..."}`}
+            value={(table.getColumn(filterColumnName || "")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn(filterColumnName || "")?.setFilterValue(event.target.value)
           }
           className="max-w-sm border border-gray-200"
-        />
+          />
+          </div>
         <Button variant="outline" className="sm-bg-btn-primary sm-btn-rounded text-white" onClick={handleAdd}>Nuevo</Button>
       </div>
       <div className="rounded-md border border-gray-200">

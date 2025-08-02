@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getEvaluaciones, AddEvaluacion } from "@/services/evaluaciones.service"
+import { getEvaluaciones, AddEvaluacion, DeleteEvaluacion } from "@/services/evaluaciones.service"
 import { DataTable } from "@/components/EvaluacionList/dataTable"
 import { getEvaluacionColumns } from "./EvaluacionTableColumns"
 import { EvaluacionModal } from "./EvaluacionModal"
@@ -18,11 +18,12 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
     const [modalOpen, setModalOpen] = useState(false)
     const [modalMode, setModalMode] = useState("add" as "add" | "edit")
     const [modalData, setModalData] = useState<IEvaluacion | null>(null)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        getEvalAsync()
-    }, [])
+        if(isLoading)
+            getEvalAsync()
+    }, [isLoading])
 
     const getEvalAsync = async () => {
         setIsLoading(true)
@@ -30,7 +31,6 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
         setIsLoading(false)
         setEvaluaciones(result)
     }
-
 
     const handleAdd = () => {
         setModalMode("add")
@@ -40,7 +40,11 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
     const handleEdit = (evaluacion: IEvaluacion) => {
         onEdit(evaluacion);
     }
-    const handleDelete = (id: number) => {
+    const handleDelete = async (id: number) => {
+        console.log("handleDelete", id)
+        setIsLoading(true)
+        await DeleteEvaluacion(id)
+        setIsLoading(false)
         onDelete(id)
     }
 
@@ -48,20 +52,16 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
         const newEvaluacion: IEvaluacion = {
             id: 0,
             nombre: formData.get("nombre") as string,
-            proceso_id: Number(proceso_id),
-            sup_terreno: Number(formData.get("sup_terreno")),
-            sup_construida: Number(formData.get("sup_construida")),
-            valor_terreno: Number(formData.get("valor_terreno")),
+            procesoId: Number(proceso_id),
+            supTerreno: Number(formData.get("sup_terreno")),
+            supConstruida: Number(formData.get("sup_construida")),
+            valorTerreno: Number(formData.get("valor_terreno")),
             items: [],
             tipologias: []
         }
-        console.log("Nueva evaluacion:", newEvaluacion)
-
         setIsLoading(true)
-        const result: IEvaluacion[] = await AddEvaluacion(newEvaluacion)
-        console.log("AddEvaluacion: ", result)
+        const result: IEvaluacion = await AddEvaluacion(newEvaluacion)
         setIsLoading(false)
-        setEvaluaciones(result)
     }
     
     return (
@@ -71,16 +71,12 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
                 {isLoading && <Loader size="small" />}
             </div>
             <EvaluacionModal isOpen={modalOpen} mode={modalMode} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} data={modalData}/>
-            {evaluaciones.length > 0 ? (
-                <DataTable
+            <DataTable
                 columns={getEvaluacionColumns({ onEdit: handleEdit, onDelete: handleDelete })}
                 data={evaluaciones}
                 filterColumnName="nombre"
                 handleAdd={handleAdd}
-                />
-            ) : (
-                <p>No hay evaluaciones</p>
-            )}
+            />
         </div>
     )
 }   

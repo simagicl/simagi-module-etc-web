@@ -25,15 +25,15 @@ export const BasicInfoForm = ({ formId = "basic-info-form", data, onSubmit }: Ba
                 </div>
                 <div className="grid gap-3">
                     <Label htmlFor="sup_terreno-1">Superficie Terreno [m2]</Label>
-                    <Input id="sup_terreno-1" name="sup_terreno" type="number" className="border border-gray-300" placeholder="100.0" required defaultValue={data?.sup_terreno}/>
+                    <Input id="sup_terreno-1" name="sup_terreno" type="number" className="border border-gray-300" placeholder="100.0" required defaultValue={data?.supTerreno}/>
                 </div>
                 <div className="grid gap-3">
                     <Label htmlFor="sup_construida-1">Superficie Construida [m2]</Label>
-                    <Input id="sup_construida-1" name="sup_construida" type="number" className="border border-gray-300" placeholder="50.0" required defaultValue={data?.sup_construida}/>
+                    <Input id="sup_construida-1" name="sup_construida" type="number" className="border border-gray-300" placeholder="50.0" required defaultValue={data?.supConstruida}/>
                 </div>
                 <div className="grid gap-3">
                     <Label htmlFor="valor_terreno-1">Valor Terreno [UF]</Label>
-                    <Input id="valor_terreno-1" name="valor_terreno" type="number" className="border border-gray-300" placeholder="100000" required defaultValue={data?.valor_terreno}/>
+                    <Input id="valor_terreno-1" name="valor_terreno" type="number" className="border border-gray-300" placeholder="100.000" required defaultValue={data?.valorTerreno}/>
                 </div>
             </div>
         </form>

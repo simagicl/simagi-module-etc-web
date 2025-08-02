@@ -21,6 +21,7 @@ export const SimagiEtcModule = () => {
     }
 
     const handleEvaluacionDelete = (id: number) => {
+        console.log("handleEvaluacionDelete", id)
         setCurrentStep(step.list)
     }
 
