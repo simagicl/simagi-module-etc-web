@@ -1,27 +1,36 @@
 import { useEffect, useState } from "react"
-import { getEvaluaciones } from "@/services/evaluaciones.service"
-import { DataTable } from "@/components/ui/dataTable"
+import { getEvaluaciones, AddEvaluacion } from "@/services/evaluaciones.service"
+import { DataTable } from "@/components/EvaluacionList/dataTable"
 import { getEvaluacionColumns } from "./EvaluacionTableColumns"
 import { EvaluacionModal } from "./EvaluacionModal"
 import type { IEvaluacion } from "@/interfaces/evaluacion.interface"
+import { Loader } from "../Common/Loader"
 
 interface EvaluacionListProps {
     title: string;
+    proceso_id: number;
     onEdit: (evaluacion: IEvaluacion) => void;
     onDelete: (id: number) => void;
 }
 
-export const EvaluacionList = ({ title, onEdit, onDelete }: EvaluacionListProps) => {
+export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: EvaluacionListProps) => {
     const [evaluaciones, setEvaluaciones] = useState<IEvaluacion[]>([])
     const [modalOpen, setModalOpen] = useState(false)
     const [modalMode, setModalMode] = useState("add" as "add" | "edit")
     const [modalData, setModalData] = useState<IEvaluacion | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        const result: IEvaluacion[] = getEvaluaciones()
-        console.log("GetEvaluaciones: ", result)
-        setEvaluaciones(result)
+        getEvalAsync()
     }, [])
+
+    const getEvalAsync = async () => {
+        setIsLoading(true)
+        const result: IEvaluacion[] = await getEvaluaciones()
+        setIsLoading(false)
+        setEvaluaciones(result)
+    }
+
 
     const handleAdd = () => {
         setModalMode("add")
@@ -35,20 +44,39 @@ export const EvaluacionList = ({ title, onEdit, onDelete }: EvaluacionListProps)
         onDelete(id)
     }
 
-    const handleSubmit = (formData: FormData) => {
-        console.log("handleSubmit", formData)
+    const handleSubmit = async (formData: FormData) => {
+        const newEvaluacion: IEvaluacion = {
+            id: 0,
+            nombre: formData.get("nombre") as string,
+            proceso_id: Number(proceso_id),
+            sup_terreno: Number(formData.get("sup_terreno")),
+            sup_construida: Number(formData.get("sup_construida")),
+            valor_terreno: Number(formData.get("valor_terreno")),
+            items: [],
+            tipologias: []
+        }
+        console.log("Nueva evaluacion:", newEvaluacion)
+
+        setIsLoading(true)
+        const result: IEvaluacion[] = await AddEvaluacion(newEvaluacion)
+        console.log("AddEvaluacion: ", result)
+        setIsLoading(false)
+        setEvaluaciones(result)
     }
     
     return (
         <div>
-            <h2 className="text-2xl font-bold">{title}</h2>
+            <div className="flex justify-between px-2">
+                <h2 className="text-2xl font-bold">{title}</h2>
+                {isLoading && <Loader size="small" />}
+            </div>
             <EvaluacionModal isOpen={modalOpen} mode={modalMode} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} data={modalData}/>
             {evaluaciones.length > 0 ? (
                 <DataTable
-                    columns={getEvaluacionColumns({ onEdit: handleEdit, onDelete: handleDelete })}
-                    data={evaluaciones}
-                    filterColumnName="nombre"
-                    handleAdd={handleAdd}
+                columns={getEvaluacionColumns({ onEdit: handleEdit, onDelete: handleDelete })}
+                data={evaluaciones}
+                filterColumnName="nombre"
+                handleAdd={handleAdd}
                 />
             ) : (
                 <p>No hay evaluaciones</p>

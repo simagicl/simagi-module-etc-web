@@ -31,7 +31,7 @@ export const SimagiEtcModule = () => {
                 { label: "Home", href: "/" },
                 { label: "Evaluaciones", href: "/evaluaciones" },
             ]} />
-            {currentStep === step.list && <EvaluacionList title="Evaluaciones" onEdit={handleEvaluacionEdit} onDelete={handleEvaluacionDelete} />}
+            {currentStep === step.list && <EvaluacionList title="Evaluaciones" proceso_id={1} onEdit={handleEvaluacionEdit} onDelete={handleEvaluacionDelete} />}
             {currentStep === step.detail && <EvaluacionDetail evaluacion={currentEvaluacion!} onExit={() => setCurrentStep(step.list)} />}
         </MainLayout>
     )

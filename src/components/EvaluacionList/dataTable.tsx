@@ -59,7 +59,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className=" p-4 rounded-md shadow-lg border border-gray-200">
+    <div className=" p-4 rounded-md shadow-lg bg-gray-100">
       <div className="flex items-center py-4 gap-2">
         <Label className="mr-2 text-sm" htmlFor={filterColumnName || ""}>Buscar: </Label>
         <Input
@@ -73,13 +73,13 @@ export function DataTable<TData, TValue>({
         <Button variant="outline" className="sm-bg-btn-primary sm-btn-rounded text-white" onClick={handleAdd}>Nuevo</Button>
       </div>
       <div className="rounded-md border border-gray-200">
-        <Table>
+        <Table className="border border-gray-200">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="border border-gray-200">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-center bg-gray-200">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -98,6 +98,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="text-center border border-gray-200"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

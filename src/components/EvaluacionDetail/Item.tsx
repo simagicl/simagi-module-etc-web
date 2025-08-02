@@ -9,22 +9,21 @@ interface EvaluacionItemProps {
     item: IEvaluacionItem;
     tipologias: IResumenTipologia[] | undefined;
     handleEditItem?: (item: IEvaluacionItem) => void;
-    handleDeleteItem?: (item: IEvaluacionItem) => void;
+    handleDeleteItem?: (itemId: number) => void;
 }
 
 export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteItem }: EvaluacionItemProps) {
-    const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+    const [tableOpen, setTableOpen] = useState(false);
     const [itemData, setItemData] = useState(item);
-    const [modalOpen, setModalOpen] = useState(false);
 
     const onEditItem = (item: IEvaluacionItem) => {
-        setOpen(true);
+        setModalOpen(true);
         handleEditItem?.(item);
     };
 
-    const onDeleteItem = (item: IEvaluacionItem) => {
-        setOpen(true);
-        handleDeleteItem?.(item);
+    const onDeleteItem = (itemId: number) => {
+        handleDeleteItem?.(itemId);
     };
 
     const tipologiaHeaders = useMemo(() => {
@@ -57,10 +56,10 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
             handleEditItem?.(formData);
             setModalOpen(false);
           }} data={itemData} />
-            <div className="flex justify-between sm-bg-cyan py-1 px-4 rounded-t-lg text-white">
+            <div className={`flex justify-between sm-bg-cyan py-1 px-4 text-gray-800 ${tableOpen ? "rounded-t-lg" : "rounded-lg"}`}>
                 <div className="flex items-center">
-                <Button className="bg-teal-500" onClick={() => setOpen(!open)}>
-                    {open ? <MinusIcon className="h-4 w-4" /> : <PlusIcon className="h-4 w-4" />}
+                <Button className="bg-teal-500" onClick={() => setTableOpen(!tableOpen)}>
+                    {tableOpen ? <MinusIcon className="h-4 w-4" /> : <PlusIcon className="h-4 w-4" />}
                 </Button>
                 </div>
                 <div>
@@ -96,12 +95,12 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
                   <Button className="bg-amber-400" onClick={() => setModalOpen(true)}>
                     <PencilIcon className="h-4 w-4" />
                   </Button>
-                  <Button className="bg-red-400" onClick={() => onDeleteItem(itemData)}>
+                  <Button className="bg-red-400" onClick={() => onDeleteItem(itemData.id)}>
                     <TrashIcon className="h-4 w-4" />
                   </Button>
                 </div>
             </div>
-            <div className="rounded-b-lg border border-gray-200 p-2" style={{ display: open ? "block" : "none" }}>
+            <div className="rounded-b-lg border border-gray-200 p-2" style={{ display: tableOpen ? "block" : "none" }}>
                 <DataTable columns={columns} data={itemData.subItems} pagination={false} />
             </div>
         </div>

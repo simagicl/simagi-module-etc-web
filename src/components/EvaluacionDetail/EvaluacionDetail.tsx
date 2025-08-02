@@ -25,6 +25,7 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
     const [tipologias, setTipologias] = useState<IResumenTipologia[]>(evaluacionData.tipologias)
     const [hasChanged, setHasChanged] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [isSaving, setIsSaving] = useState(false)
 
     useEffect(() => {
         console.log("Cargando evaluacionData", evaluacionData)
@@ -35,7 +36,12 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
 
     const handleSave = () => {
         console.log("evaluacionData", evaluacionData)
-        onExit?.()
+        //onExit?.()
+        setIsSaving(true)
+        setTimeout(() => {
+            setIsSaving(false)
+        }, 500)
+        setHasChanged(false)
     }
 
     const handleAddItem = () => {
@@ -59,12 +65,22 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
         setHasChanged(true)
     }
 
-    const handleDeleteItem = (item: IEvaluacionItem) => {
-        setEvaluacionData({
-            ...evaluacionData,
-            items: evaluacionData.items.filter((i) => i.id !== item.id)
-        })
-        setHasChanged(true)
+    const handleDeleteItem = (itemId: number) => {
+
+        console.log("borrando item", itemId)
+
+        const itemIndex = evaluacionData.items.findIndex((i) => i.id === itemId)
+        console.log("itemIndex", itemIndex)
+
+        if (itemIndex !== -1) {
+            const newItems = [...evaluacionData.items]
+            newItems.splice(itemIndex, 1)
+            setEvaluacionData({
+                ...evaluacionData,
+                items: newItems
+            })
+            setHasChanged(true)
+        }
     }
     
     return (
@@ -76,9 +92,9 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
                         <h2 className="text-2xl font-bold">{evaluacionData.nombre}</h2>
                     </div>
                     <div className="flex gap-4 justify-between flex-wrap">
-                        <div className="border border-gray-200 p-2 rounded-lg px-4">
+                        <div className="border border-gray-200 p-2 rounded-lg px-4 w-1/4">
                             <p className="text-lg font-bold">Resumen:</p>
-                            <div>
+                            <div className="flex flex-col gap-2">
                                 <p className="text-sm font-bold">Superficie Terreno: {evaluacionData.sup_terreno.toLocaleString()} m2</p>
                                 <p className="text-sm font-bold">Superficie Construida: {evaluacionData.sup_construida.toLocaleString()} m2</p>
                                 <p className="text-sm font-bold">Valor Terreno: {evaluacionData.valor_terreno.toLocaleString()} UF</p>
@@ -101,7 +117,7 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
                                     <TabsTrigger className="bg-green-300 sm-btn-rounded shadow-lg" value="items">Evaluación</TabsTrigger>
                                 </TabsList>
                                 <div className="flex gap-1">
-                                    <Button className="sm-btn-rounded bg-red-400 text-white" onClick={handleSave} disabled={!hasChanged}>Guardar Evaluación</Button>
+                                    <Button className="sm-btn-rounded bg-red-400 text-white" onClick={handleSave} disabled={!hasChanged}>{isSaving ? "Guardando..." : "Guardar Evaluación"}</Button>
                                     <Button className="sm-btn-rounded bg-cyan-800 text-white" onClick={onExit}>Volver</Button>
                                 </div>
                             </div>
@@ -134,7 +150,7 @@ export const EvaluacionDetail = ({ evaluacion, onExit }: EvaluacionDetailProps) 
                                     <div className="flex flex-col gap-2">
                                         <div className="flex flex-col gap-1">
                                             { evaluacionData.items.map((item, index) => (
-                                                <EvaluacionItem key={index} item={item} tipologias={tipologias} handleEditItem={(item) => handleEditItem(item)} handleDeleteItem={(item) => handleDeleteItem(item)}/>
+                                                <EvaluacionItem key={index} item={item} tipologias={tipologias} handleEditItem={(item) => handleEditItem(item)} handleDeleteItem={(itemId) => handleDeleteItem(itemId)}/>
                                             ))}
                                         </div>  
                                         <Button className="sm-btn-rounded sm-bg-green-1 text-white" onClick={() => handleAddItem()}>Agregar Item</Button>
