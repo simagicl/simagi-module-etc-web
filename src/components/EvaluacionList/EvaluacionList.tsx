@@ -26,8 +26,7 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
             getEvalAsync()
     }, [isLoading])
 
-    const getEvalAsync = async () => {
-        setIsLoading(true)
+    const getEvalAsync = async () => {        
         const result: IEvaluacion[] = await getEvaluaciones()
         setIsLoading(false)
         setEvaluaciones(result)
@@ -60,9 +59,8 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
             items: [],
             tipologias: []
         }
-        setIsLoading(true)
         const result: IEvaluacion = await AddEvaluacion(newEvaluacion)
-        setIsLoading(false)
+        setIsLoading(true)
     }
     
     return (
