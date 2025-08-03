@@ -16,6 +16,7 @@ import { Tipologias } from "./Tipologias"
 import { Loader } from "../Common/Loader"
 import { getEvaluacionById } from "@/services/evaluaciones.service"
 import { ComponentMock } from "../Common/ComponentMock"
+import { SaveIcon } from "lucide-react"
 
 interface EvaluacionDetailProps {
     evaluacionId: number;
@@ -41,8 +42,39 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
         }
     }
 
-    const handleSave = () => {
-        console.log("evaluacionData", evaluacionData)
+    const handleSaveBasicInfo = (formData: FormData) => {
+        console.log(formData)
+
+        //onExit?.()
+        setIsSaving(true)
+        setTimeout(() => {
+            setIsSaving(false)
+        }, 500)
+        setHasChanged(false)
+    }
+
+    const handleSaveTipologias = (tipologias: IResumenTipologia[]) => {
+        console.log("Save Tipologias: ",tipologias)
+        //onExit?.()
+        setIsSaving(true)
+        setTimeout(() => {
+            setIsSaving(false)
+        }, 500)
+        setHasChanged(false)
+    }
+
+    const handleSaveEvaluacionItems = (items: IEvaluacionItem[]) => {
+        console.log("Save Items: ",items)
+        //onExit?.()
+        setIsSaving(true)
+        setTimeout(() => {
+            setIsSaving(false)
+        }, 500)
+        setHasChanged(false)
+    }
+
+    const handleSaveUrbanizacion = () => {
+        console.log("Save Urbanizacion")
         //onExit?.()
         setIsSaving(true)
         setTimeout(() => {
@@ -95,7 +127,7 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
             <div className="flex flex-col gap-4">         
                 <div className="flex justify-between">
                     <h2 className="text-2xl font-bold">{evaluacionData.nombre}</h2>
-                    {loading && ( <Loader />)}
+                    {loading ? ( <Loader />):(<Button className="sm-btn-rounded bg-cyan-800 text-white" onClick={onExit}>Volver</Button>)}
                 </div>
                 <div className="flex gap-4 justify-between flex-wrap">
                     {loading ? ( <ComponentMock className="w-1/4 min-h-32" />) : (
@@ -127,36 +159,49 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                 <TabsTrigger className="bg-amber-300 sm-btn-rounded shadow-lg" value="urbanizacion">Urbanización</TabsTrigger>
                                 <TabsTrigger className="bg-green-300 sm-btn-rounded shadow-lg" value="items">Evaluación</TabsTrigger>
                             </TabsList>
-                            <div className="flex gap-1">
-                                <Button className="sm-btn-rounded bg-red-400 text-white" onClick={handleSave} disabled={!hasChanged}>{isSaving ? "Guardando..." : "Guardar Evaluación"}</Button>
-                                <Button className="sm-btn-rounded bg-cyan-800 text-white" onClick={onExit}>Volver</Button>
-                            </div>
                         </div>
 
                         <TabsContent value="datos-basicos" className="min-h-96 border border-gray-200 p-2 rounded-lg flex flex-col gap-2">
-                            <h2 className="text-xl font-bold">Datos Básicos</h2>
-                            <BasicInfoForm formId="evaluacion-detail-form" data={evaluacionData} onSubmit={(formData) => {
-                                console.log(formData)
-                                setHasChanged(true)
-                                setEvaluacionData({
-                                    ...evaluacionData,
-                                    nombre: formData.get("nombre") as string,
-                                    supTerreno: Number(formData.get("sup_terreno")),
-                                    supConstruida: Number(formData.get("sup_construida")),
-                                    valorTerreno: Number(formData.get("valor_terreno")),
-                                })
-                                }} />
-                            <Button type="submit" form="evaluacion-detail-form" className="sm-bg-green-1 sm-btn-rounded text-white">Guardar cambios</Button>     
-
+                            <div className="flex justify-between">
+                                <h2 className="text-xl font-bold">Datos Básicos</h2>
+                                <Button 
+                                    className="sm-btn-rounded bg-red-400 text-white" 
+                                    
+                                    type="submit"
+                                    form="evaluacion-detail-form" 
+                                >
+                                    <SaveIcon className="h-4 w-4" />
+                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                </Button>
+                            </div>
+                            <BasicInfoForm formId="evaluacion-detail-form" data={evaluacionData} onSubmit={handleSaveBasicInfo} />
                         </TabsContent>
 
                         <TabsContent value="tipologias" className="min-h-96 border border-gray-200 p-2 rounded-lg flex flex-col gap-2">
-                            <h2 className="text-xl font-bold">Tipologías</h2>
+                            <div className="flex justify-between">
+                                <h2 className="text-xl font-bold">Tipologías</h2>
+                                <Button 
+                                    className="sm-btn-rounded bg-red-400 text-white" 
+                                    onClick={() => handleSaveTipologias(tipologias)}                                   
+                                >
+                                    <SaveIcon className="h-4 w-4" />
+                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                </Button>
+                            </div>
                             <Tipologias tipologias={tipologias} onChange={(tipologias) => setTipologias(tipologias)} hasChanged={(hasChanged) => setHasChanged(hasChanged)}/>
                         </TabsContent>
 
-                        <TabsContent value="items" className="min-h-96 border border-gray-200 p-2 rounded-lg">
-                            
+                        <TabsContent value="items" className="min-h-96 border border-gray-200 p-2 rounded-lg flex flex-col gap-2">
+                            <div className="flex justify-between">
+                                <h2 className="text-xl font-bold">Evaluación</h2>
+                                <Button 
+                                    className="sm-btn-rounded bg-red-400 text-white" 
+                                    onClick={() => handleSaveEvaluacionItems(evaluacionData.items)}                                   
+                                >
+                                    <SaveIcon className="h-4 w-4" />
+                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                </Button>
+                            </div>
                             { evaluacionData.items?.length > 0 ? (
                                 <div className="flex flex-col gap-2">
                                     <div className="flex flex-col gap-1">
@@ -174,8 +219,18 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                 </div>
                             )}
                         </TabsContent>
+                        
                         <TabsContent value="urbanizacion" className="min-h-96 border border-gray-200 p-2 rounded-lg">
-                            <h2 className="text-xl font-bold">Urbanización</h2>
+                            <div className="flex justify-between">
+                                <h2 className="text-xl font-bold">Urbanización</h2>
+                                <Button 
+                                    className="sm-btn-rounded bg-red-400 text-white" 
+                                    onClick={() => handleSaveUrbanizacion()}
+                                >
+                                    <SaveIcon className="h-4 w-4" />
+                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                </Button>
+                            </div>
                         </TabsContent>
                     </Tabs>     
                 </div>
