@@ -13,10 +13,10 @@ const step = {
 
 export const SimagiEtcModule = () => {
     const [currentStep, setCurrentStep] = useState(step.list)
-    const [currentEvaluacion, setCurrentEvaluacion] = useState<IEvaluacion | null>(null)
+    const [currentEvaluacionId, setCurrentEvaluacionId] = useState<number | null>(null)
 
-    const handleEvaluacionEdit = (evaluacion: IEvaluacion) => {
-        setCurrentEvaluacion(evaluacion)
+    const handleEvaluacionEdit = (evaluacionId: number) => {
+        setCurrentEvaluacionId(evaluacionId)
         setCurrentStep(step.detail)
     }
 
@@ -33,7 +33,7 @@ export const SimagiEtcModule = () => {
                 { label: "Evaluaciones", href: "/evaluaciones" },
             ]} />
             {currentStep === step.list && <EvaluacionList title="Evaluaciones" proceso_id={1} onEdit={handleEvaluacionEdit} onDelete={handleEvaluacionDelete} />}
-            {currentStep === step.detail && <EvaluacionDetail evaluacion={currentEvaluacion!} onExit={() => setCurrentStep(step.list)} />}
+            {currentStep === step.detail && <EvaluacionDetail evaluacionId={currentEvaluacionId!} onExit={() => setCurrentStep(step.list)} />}
         </MainLayout>
     )
 }

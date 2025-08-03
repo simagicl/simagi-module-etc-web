@@ -5,11 +5,12 @@ import { getEvaluacionColumns } from "./EvaluacionTableColumns"
 import { EvaluacionModal } from "./EvaluacionModal"
 import type { IEvaluacion } from "@/interfaces/evaluacion.interface"
 import { Loader } from "../Common/Loader"
+import { ComponentMock } from "../Common/ComponentMock"
 
 interface EvaluacionListProps {
     title: string;
     proceso_id: number;
-    onEdit: (evaluacion: IEvaluacion) => void;
+    onEdit: (evaluacionId: number) => void;
     onDelete: (id: number) => void;
 }
 
@@ -37,8 +38,8 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
         setModalData(null)
         setModalOpen(true)
     }
-    const handleEdit = (evaluacion: IEvaluacion) => {
-        onEdit(evaluacion);
+    const handleEdit = (evaluacionId: number) => {
+        onEdit(evaluacionId);
     }
     const handleDelete = async (id: number) => {
         console.log("handleDelete", id)
@@ -71,12 +72,12 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
                 {isLoading && <Loader size="small" />}
             </div>
             <EvaluacionModal isOpen={modalOpen} mode={modalMode} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} data={modalData}/>
-            <DataTable
+            {isLoading ? ( <ComponentMock className="min-h-96" />) : (<DataTable
                 columns={getEvaluacionColumns({ onEdit: handleEdit, onDelete: handleDelete })}
                 data={evaluaciones}
                 filterColumnName="nombre"
                 handleAdd={handleAdd}
-            />
+            />)}
         </div>
     )
 }   

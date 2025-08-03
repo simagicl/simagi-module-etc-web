@@ -11,7 +11,6 @@ export const EvaluacionesService = () => {
 export const getEvaluaciones = async () => {
     try {
         const response = await axios.get(EP_EVALUACIONES)
-        console.log("GetEvaluacionesService - GetEvaluaciones", response.data)
         if (response.data.evaluaciones) {
             return response.data.evaluaciones
         }
@@ -60,8 +59,32 @@ export const DeleteEvaluacion = async (id: number) => {
     }
 }
 
-
-export const getEvaluacionById = (id: number) => {
-    console.log("GetEvaluacionByIdService", id)
-    return null
+export const getEvaluacionById = async (id: number) => {
+    try {
+        const response = await axios.get(EP_EVALUACIONES + "/" + id)
+        const evaluacion: IEvaluacion = {
+            id: response.data.evaluacion.id,
+            nombre: response.data.evaluacion.nombre,
+            procesoId: response.data.evaluacion.procesoid,
+            supTerreno: response.data.evaluacion.supTerreno,
+            supConstruida: response.data.evaluacion.supConstruida,
+            valorTerreno: response.data.evaluacion.valorTerreno,
+            items: response.data.evaluacion.items,
+            tipologias: response.data.evaluacion.tipologias
+        }
+        return evaluacion
+    } catch (error) {
+        console.log("GetEvaluacionByIdService - Error", error)
+        const resp: IEvaluacion = {
+            id: -1,
+            nombre: "",
+            procesoId: 0,
+            supTerreno: 0,
+            supConstruida: 0,
+            valorTerreno: 0,
+            items: [],
+            tipologias: []
+        } as IEvaluacion
+        return resp
+    }
 }
