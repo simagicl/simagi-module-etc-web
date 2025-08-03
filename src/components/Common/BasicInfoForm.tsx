@@ -6,9 +6,10 @@ interface BasicInfoFormProps {
     formId?: string;
     data?: IEvaluacion | null;
     onSubmit?: (formData: FormData) => void;
+    onChange?: () => void;
 }
 
-export const BasicInfoForm = ({ formId = "basic-info-form", data, onSubmit }: BasicInfoFormProps) => {
+export const BasicInfoForm = ({ formId = "basic-info-form", data, onSubmit, onChange }: BasicInfoFormProps) => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -16,7 +17,7 @@ export const BasicInfoForm = ({ formId = "basic-info-form", data, onSubmit }: Ba
         onSubmit(formData); 
     };
     return (
-        <form id={formId} onSubmit={handleSubmit}>
+        <form id={formId} onSubmit={handleSubmit} onChange={() => onChange?.()}>
             <Input type="hidden" name="id" value={data?.id || 0 }/>
             <div className="grid gap-4 mt-4">
                 <div className="grid gap-3">

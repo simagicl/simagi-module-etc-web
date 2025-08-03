@@ -21,12 +21,19 @@
 
 /* HTML: <div class="loader"></div> */
 .sm-loader {
-    background: repeating-linear-gradient(-45deg,#000 0 15px,#0000 0 20px) left/200% 100%;
     animation: l3 2s infinite linear;
 	border-radius: .5rem;
 }
 @keyframes l3 {
     100% {background-position:right}
+}
+
+.sm-loader-bg-black{
+    background: repeating-linear-gradient(-45deg,#000 0 15px,#0000 0 20px) left/200% 100%;
+}
+
+.sm-loader-bg-white{
+    background: repeating-linear-gradient(-45deg,#fff 0 15px,#0000 0 20px) left/200% 100%;
 }
 
 .sm-loader-sm {
@@ -43,5 +50,7 @@
     width: calc(120px / cos(45deg));
     height: 14px;
 }
+
+
 
     

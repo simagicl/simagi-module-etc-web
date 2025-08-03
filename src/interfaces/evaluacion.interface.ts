@@ -9,6 +9,14 @@ export interface IEvaluacion {
     items: IEvaluacionItem[];
 }
 
+export interface IEvaluacionBasicInfo {
+    id: number;
+    nombre: string;
+    supTerreno: number;
+    supConstruida: number;
+    valorTerreno: number;
+}
+
 export interface IEvaluacionItem {
     id: number;
     orden: number;

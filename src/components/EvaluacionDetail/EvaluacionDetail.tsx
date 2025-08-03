@@ -14,9 +14,9 @@ import {
 import emptySearch from "@/assets/search-empty.png";
 import { Tipologias } from "./Tipologias"
 import { Loader } from "../Common/Loader"
-import { getEvaluacionById } from "@/services/evaluaciones.service"
+import { getEvaluacionById, UpdateEvaluacionBasicInfo } from "@/services/evaluaciones.service"
 import { ComponentMock } from "../Common/ComponentMock"
-import { SaveIcon } from "lucide-react"
+import { SaveIcon, TriangleAlertIcon } from "lucide-react"
 
 interface EvaluacionDetailProps {
     evaluacionId: number;
@@ -42,15 +42,21 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
         }
     }
 
-    const handleSaveBasicInfo = (formData: FormData) => {
-        console.log(formData)
-
-        //onExit?.()
+    const handleSaveBasicInfo = async (formData: FormData) => {
         setIsSaving(true)
-        setTimeout(() => {
+        const evaluacion = {
+            id: evaluacionId,
+            nombre: formData.get("nombre") as string,
+            supTerreno: Number(formData.get("sup_terreno")),
+            supConstruida: Number(formData.get("sup_construida")),
+            valorTerreno: Number(formData.get("valor_terreno")),
+        }
+        const evaluacionUpdated = await UpdateEvaluacionBasicInfo(evaluacion)
+        if (evaluacionUpdated) {
+            setEvaluacionData(evaluacionUpdated)
             setIsSaving(false)
-        }, 500)
-        setHasChanged(false)
+            setHasChanged(false)
+        }
     }
 
     const handleSaveTipologias = (tipologias: IResumenTipologia[]) => {
@@ -126,8 +132,16 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
         <div>            
             <div className="flex flex-col gap-4">         
                 <div className="flex justify-between">
-                    <h2 className="text-2xl font-bold">{evaluacionData.nombre}</h2>
-                    {loading ? ( <Loader />):(<Button className="sm-btn-rounded bg-cyan-800 text-white" onClick={onExit}>Volver</Button>)}
+                    {loading ? ( <ComponentMock className="w-1/8 min-h-4" /> ) : (<h2 className="text-2xl font-bold">{evaluacionData.nombre}</h2>)}
+                    <div className="flex gap-2 items-center">
+                        {hasChanged && (
+                            <>
+                                <TriangleAlertIcon className="h-6 w-6 text-yellow-500" />
+                                <p className="text-xs text-center w-24 text-yellow-500">Hay cambios sin guardar</p>
+                            </>
+                        )}
+                        {loading ? ( <Loader />):(<Button className="sm-btn-rounded bg-cyan-800 text-white" onClick={onExit}>Volver</Button>)}
+                    </div>
                 </div>
                 <div className="flex gap-4 justify-between flex-wrap">
                     {loading ? ( <ComponentMock className="w-1/4 min-h-32" />) : (
@@ -171,10 +185,10 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                     form="evaluacion-detail-form" 
                                 >
                                     <SaveIcon className="h-4 w-4" />
-                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                    {isSaving ? <Loader size="sm" color="white" noText /> : "Guardar"}
                                 </Button>
                             </div>
-                            <BasicInfoForm formId="evaluacion-detail-form" data={evaluacionData} onSubmit={handleSaveBasicInfo} />
+                            <BasicInfoForm formId="evaluacion-detail-form" data={evaluacionData} onSubmit={handleSaveBasicInfo} onChange={() => setHasChanged(true)} />
                         </TabsContent>
 
                         <TabsContent value="tipologias" className="min-h-96 border border-gray-200 p-2 rounded-lg flex flex-col gap-2">
@@ -185,7 +199,7 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                     onClick={() => handleSaveTipologias(tipologias)}                                   
                                 >
                                     <SaveIcon className="h-4 w-4" />
-                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                    {isSaving ? <Loader size="sm" color="white" noText /> : "Guardar"}
                                 </Button>
                             </div>
                             <Tipologias tipologias={tipologias} onChange={(tipologias) => setTipologias(tipologias)} hasChanged={(hasChanged) => setHasChanged(hasChanged)}/>
@@ -199,7 +213,7 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                     onClick={() => handleSaveEvaluacionItems(evaluacionData.items)}                                   
                                 >
                                     <SaveIcon className="h-4 w-4" />
-                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                    {isSaving ? <Loader size="sm" color="white" noText /> : "Guardar"}
                                 </Button>
                             </div>
                             { evaluacionData.items?.length > 0 ? (
@@ -228,7 +242,7 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                     onClick={() => handleSaveUrbanizacion()}
                                 >
                                     <SaveIcon className="h-4 w-4" />
-                                    {isSaving ? <Loader size="sm" noText /> : "Guardar"}
+                                    {isSaving ? <Loader size="sm" color="white" noText /> : "Guardar"}
                                 </Button>
                             </div>
                         </TabsContent>

@@ -1,5 +1,5 @@
 import axios from "axios"
-import type { IEvaluacion, IEvaluacionItem } from "@/interfaces/evaluacion.interface"
+import type { IEvaluacion, IEvaluacionBasicInfo } from "@/interfaces/evaluacion.interface"
 
 const API_URL = "http://localhost:3000/api/v1/"
 const EP_EVALUACIONES = API_URL + "evaluacion"
@@ -47,8 +47,40 @@ export const AddEvaluacion = async (evaluacion: IEvaluacion) => {
     return newEvaluacion
 }
 
-export const UpdateEvaluacion = (evaluacion: IEvaluacion) => {
+export const UpdateEvaluacion = async (evaluacion: IEvaluacion) => {
     console.log("UpdateEvaluacionService", evaluacion)
+}
+
+export const UpdateEvaluacionBasicInfo = async (evaluacion: IEvaluacionBasicInfo) => {
+    try {
+        const response = await axios.put(EP_EVALUACIONES + "/" + evaluacion.id + "/basic-info", evaluacion)
+        const evaluacionUpdated: IEvaluacion = {
+            id: response.data.evaluacion.id,
+            nombre: response.data.evaluacion.nombre,
+            procesoId: response.data.evaluacion.procesoid,
+            supTerreno: response.data.evaluacion.supTerreno,
+            supConstruida: response.data.evaluacion.supConstruida,
+            valorTerreno: response.data.evaluacion.valorTerreno,
+            items: response.data.evaluacion.items,
+            tipologias: response.data.evaluacion.tipologias
+        }
+        return evaluacionUpdated
+    } catch (error) {
+        console.log("UpdateEvaluacionBasicInfoService - Error", error)
+        return null
+    }
+}
+
+export const UpdateEvaluacionTipologias = async (evaluacion: IEvaluacion) => {
+    console.log("UpdateEvaluacionTipologiasService", evaluacion)
+}
+
+export const UpdateEvaluacionItems = async (evaluacion: IEvaluacion) => {
+    console.log("UpdateEvaluacionItemsService", evaluacion)
+}
+
+export const UpdateEvaluacionUrbanizacion = async (evaluacion: IEvaluacion) => {
+    console.log("UpdateEvaluacionUrbanizacionService", evaluacion)
 }
 
 export const DeleteEvaluacion = async (id: number) => {
