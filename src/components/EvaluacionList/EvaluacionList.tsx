@@ -67,7 +67,7 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
         <div>
             <div className="flex justify-between px-2">
                 <h2 className="text-2xl font-bold">{title}</h2>
-                {isLoading && <Loader size="small" />}
+                {isLoading && <Loader size="md" />}
             </div>
             <EvaluacionModal isOpen={modalOpen} mode={modalMode} onClose={() => setModalOpen(false)} onSubmit={handleSubmit} data={modalData}/>
             {isLoading ? ( <ComponentMock className="min-h-96" />) : (<DataTable
