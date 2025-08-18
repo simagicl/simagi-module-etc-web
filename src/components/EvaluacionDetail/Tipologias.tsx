@@ -1,28 +1,36 @@
 import { DataTable } from "./dataTable"
-import type { IResumenTipologia } from "@/interfaces/evaluacion.interface"
+import type { IEvaluacionTipologia } from "@/interfaces/evaluacion.interface"
 import { useState } from "react"  
 import { Button } from "@/components/ui/button"
 import { TipologiaModal } from "./TipologiaModal";
 
 
 interface TipologiasProps {
-    tipologias?: IResumenTipologia[];
+    tipologias?: IEvaluacionTipologia[];
+    toDelete?: number[];
     hasChanged?: (hasChanged: boolean) => void;
-    onChange?: (tipologias: IResumenTipologia[]) => void;
+    onChange?: (tipologias: IEvaluacionTipologia[]) => void;
 }
 
-export const Tipologias = ({ tipologias, hasChanged, onChange }: TipologiasProps) => {
+export const Tipologias = ({ tipologias, toDelete, hasChanged, onChange }: TipologiasProps) => {
     const [modalOpen, setModalOpen] = useState(false)
-    const [selectedTipologia, setSelectedTipologia] = useState<IResumenTipologia | null>(null)
+    const [selectedTipologia, setSelectedTipologia] = useState<IEvaluacionTipologia | null>(null)
+    const [newTipologiaIdx, setNewTipologiaIdx] = useState(-1)
+    const [tipologiaToDelete, setTipologiaToDelete] = useState<number[]>([])
     
     const columns = [
         {
             accessorKey: "nombre",
             header: "Nombre",
+            cell: ({ row }: any) => (
+                <div className="flex gap-2 justify-left px-2">
+                    <p>{row.original.nombre}</p>
+                </div>
+            ),
         },
         {
-            accessorKey: "cantidad",
-            header: "Cantidad",
+            accessorKey: "unidad",
+            header: "Unidades",
         },
         {
             accessorKey: "superficie",
@@ -57,20 +65,23 @@ export const Tipologias = ({ tipologias, hasChanged, onChange }: TipologiasProps
     ]
 
     const addTipologia = () => {
-        console.log("addTipologia")
+        console.log("addTipologia IDX: ", newTipologiaIdx)
         const newTipologias = [...tipologias ?? []]
         newTipologias.push({
-            id: 0,
-            nombre: "nueva tipologia", 
-            cantidad: 0,
+            id: newTipologiaIdx,
+            tipo: "principal",
+            nombre: "Nueva Tipología", 
+            unidad: 0,
             superficie: 0,
             valor: 0,
+            descripcion: "",
         })
         onChange?.(newTipologias)
         hasChanged?.(true)
+        setNewTipologiaIdx(newTipologiaIdx - 1)
     }
 
-    const editTipologia = (tipologia: IResumenTipologia) => {
+    const editTipologia = (tipologia: IEvaluacionTipologia) => {
         console.log("editTipologia", tipologia)
         setSelectedTipologia(tipologia)
         setModalOpen(true)
@@ -86,10 +97,12 @@ export const Tipologias = ({ tipologias, hasChanged, onChange }: TipologiasProps
         newTipologias[index || 0] = {
             ...selectedTipologia,
             id: selectedTipologia?.id || 0,
+            tipo: formData.get("tipo") as string || "principal",
             nombre: formData.get("nombre") as string,
-            cantidad: Number(formData.get("cantidad")),
+            unidad: Number(formData.get("unidad")),
             superficie: Number(formData.get("superficie")),
             valor: Number(formData.get("valor")),
+            descripcion: formData.get("descripcion") as string || "",
         }
 
         onChange?.(newTipologias)
@@ -102,8 +115,11 @@ export const Tipologias = ({ tipologias, hasChanged, onChange }: TipologiasProps
         const index = newTipologias.findIndex((tipologia) => tipologia.id === id)
         if (index === -1) return
         newTipologias.splice(index, 1)
+        tipologiaToDelete.push(id)   
+        setTipologiaToDelete(tipologiaToDelete)
         onChange?.(newTipologias)
         hasChanged?.(true)
+        console.log("tipologiaToDelete", tipologiaToDelete)
     }
 
     return (

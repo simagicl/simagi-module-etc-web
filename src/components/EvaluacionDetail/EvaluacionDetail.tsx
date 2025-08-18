@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
-import type { IEvaluacion, IEvaluacionItem, IResumenTipologia } from "@/interfaces/evaluacion.interface"
+import type { IEvaluacion } from "@/interfaces/evaluacion.interface"
+import type { IEvaluacionItem } from "@/interfaces/item.interface"
+import type { IEvaluacionTipologia } from "@/interfaces/tipologia.interface"
 import { Button } from "@/components/ui/button"
 import { CardItem } from "./CardItem"
 import { EvaluacionItem } from "./Item"
@@ -14,9 +16,15 @@ import {
 import emptySearch from "@/assets/search-empty.png";
 import { Tipologias } from "./Tipologias"
 import { Loader } from "../Common/Loader"
-import { getEvaluacionById, UpdateEvaluacionBasicInfo } from "@/services/evaluaciones.service"
 import { ComponentMock } from "../Common/ComponentMock"
 import { SaveIcon, TriangleAlertIcon } from "lucide-react"
+import { 
+    getEvaluacionById, 
+    UpdateEvaluacionBasicInfo, 
+    UpdateEvaluacionTipologias,
+} from "@/services/evaluaciones.service"
+     
+import { UpdateEvaluacionItems } from "@/services/items.service" 
 
 interface EvaluacionDetailProps {
     evaluacionId: number;
@@ -25,8 +33,9 @@ interface EvaluacionDetailProps {
 
 export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps) => {
     const [evaluacionData, setEvaluacionData] = useState<IEvaluacion>({} as IEvaluacion)
-    const [tipologias, setTipologias] = useState<IResumenTipologia[]>([])
+    const [tipologias, setTipologias] = useState<IEvaluacionTipologia[]>([])
     const [hasChanged, setHasChanged] = useState(false)
+    const [unsaved, setUnsaved] = useState<string[]>([])
     const [loading, setLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
 
@@ -38,7 +47,9 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
         const evaluacion = await getEvaluacionById(evaluacionId)
         if (evaluacion) {
             setEvaluacionData(evaluacion)
+            setTipologias(evaluacion.tipologias)
             setLoading(false)
+            console.log("EVALUACION LOAD: ", evaluacion)
         }
     }
 
@@ -55,34 +66,41 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
         if (evaluacionUpdated) {
             setEvaluacionData(evaluacionUpdated)
             setIsSaving(false)
-            setHasChanged(false)
+            popPendingChanges("basic-info");
         }
     }
 
-    const handleSaveTipologias = (tipologias: IResumenTipologia[]) => {
-        console.log("Save Tipologias: ",tipologias)
-        //onExit?.()
+    const handleSaveTipologias = async (tipologias: IEvaluacionTipologia[]) => {
         setIsSaving(true)
-        setTimeout(() => {
+        let tipologiasUpdated = await UpdateEvaluacionTipologias(evaluacionId, tipologias);
+        if (tipologiasUpdated) {
+            setTipologias(tipologiasUpdated)
             setIsSaving(false)
-        }, 500)
-        setHasChanged(false)
+            popPendingChanges("tipologias");
+        }
     }
 
-    const handleSaveEvaluacionItems = (items: IEvaluacionItem[]) => {
-        console.log("Save Items: ",items)
-        //onExit?.()
+    const handleSaveEvaluacionItems = async (items: IEvaluacionItem[]) => {
+        console.log("Saving Items: ",items)
         setIsSaving(true)
-        setTimeout(() => {
+        let savedItems = await UpdateEvaluacionItems(evaluacionId, items)
+        console.log("Saved Items: ",savedItems)
+        if (savedItems) {
+            setEvaluacionData({
+                ...evaluacionData,
+                items: savedItems
+            })
             setIsSaving(false)
-        }, 500)
-        setHasChanged(false)
+            popPendingChanges("items");
+            console.log("Saved Items: ",savedItems)
+        }
     }
 
     const handleSaveUrbanizacion = () => {
         console.log("Save Urbanizacion")
         //onExit?.()
         setIsSaving(true)
+        popPendingChanges("urbanizacion");
         setTimeout(() => {
             setIsSaving(false)
         }, 500)
@@ -91,23 +109,24 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
 
     const handleAddItem = () => {
         const newItem: IEvaluacionItem = {
-            id: evaluacionData.items.length + 1,
+            id: -1 - evaluacionData.items.length,
             orden: evaluacionData.items.length + 1,
             identificador: "",
             centroCosto: "",
             unidad: "",
+            itemTotal: 0,
             subItems: []
         }
         setEvaluacionData({
             ...evaluacionData,
             items: [...evaluacionData.items, newItem]
         })
-        setHasChanged(true)
+        pushPendingChanges("items")
     }
 
     const handleEditItem = (item: IEvaluacionItem) => {
         console.log("editando item", item)
-        setHasChanged(true)
+        pushPendingChanges("items")
     }
 
     const handleDeleteItem = (itemId: number) => {
@@ -124,8 +143,27 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                 ...evaluacionData,
                 items: newItems
             })
-            setHasChanged(true)
+            pushPendingChanges("items")
         }
+    }
+
+    const pushPendingChanges = (name: string) => {
+        setHasChanged(true)
+        if(unsaved.includes(name)) return
+        setUnsaved([...unsaved, name])
+        console.log("PendingChanges", unsaved)
+    }
+
+    const popPendingChanges = (name: string) => {
+        let pending = unsaved.filter(item => item !== name)
+        setUnsaved(pending)
+        if(pending.length === 0) 
+            setHasChanged(false)
+        console.log("PendingChanges", unsaved)
+    }
+
+    const hasPendingChanges = (name: string) => {
+        return unsaved.includes(name)
     }
     
     return (
@@ -180,7 +218,7 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                 <h2 className="text-xl font-bold">Datos Básicos</h2>
                                 <Button 
                                     className="sm-btn-rounded bg-red-400 text-white" 
-                                    
+                                    disabled={!hasPendingChanges("basic-info")}
                                     type="submit"
                                     form="evaluacion-detail-form" 
                                 >
@@ -188,28 +226,30 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                                     {isSaving ? <Loader size="sm" color="white" noText /> : "Guardar"}
                                 </Button>
                             </div>
-                            <BasicInfoForm formId="evaluacion-detail-form" data={evaluacionData} onSubmit={handleSaveBasicInfo} onChange={() => setHasChanged(true)} />
+                            <BasicInfoForm formId="evaluacion-detail-form" data={evaluacionData} onSubmit={handleSaveBasicInfo} onChange={() => pushPendingChanges("basic-info")} />
                         </TabsContent>
 
                         <TabsContent value="tipologias" className="min-h-96 border border-gray-200 p-2 rounded-lg flex flex-col gap-2">
                             <div className="flex justify-between">
                                 <h2 className="text-xl font-bold">Tipologías</h2>
                                 <Button 
-                                    className="sm-btn-rounded bg-red-400 text-white" 
+                                    className="sm-btn-rounded bg-red-400 text-white"
+                                    disabled={!hasPendingChanges("tipologias")} 
                                     onClick={() => handleSaveTipologias(tipologias)}                                   
                                 >
                                     <SaveIcon className="h-4 w-4" />
                                     {isSaving ? <Loader size="sm" color="white" noText /> : "Guardar"}
                                 </Button>
                             </div>
-                            <Tipologias tipologias={tipologias} onChange={(tipologias) => setTipologias(tipologias)} hasChanged={(hasChanged) => setHasChanged(hasChanged)}/>
+                            <Tipologias tipologias={tipologias} onChange={(tipologias) => setTipologias(tipologias)} hasChanged={(hasChanged) => pushPendingChanges("tipologias")}/>
                         </TabsContent>
 
                         <TabsContent value="items" className="min-h-96 border border-gray-200 p-2 rounded-lg flex flex-col gap-2">
                             <div className="flex justify-between">
                                 <h2 className="text-xl font-bold">Evaluación</h2>
                                 <Button 
-                                    className="sm-btn-rounded bg-red-400 text-white" 
+                                    className="sm-btn-rounded bg-red-400 text-white"
+                                    disabled={!hasPendingChanges("items")} 
                                     onClick={() => handleSaveEvaluacionItems(evaluacionData.items)}                                   
                                 >
                                     <SaveIcon className="h-4 w-4" />
@@ -219,7 +259,8 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                             { evaluacionData.items?.length > 0 ? (
                                 <div className="flex flex-col gap-2">
                                     <div className="flex flex-col gap-1">
-                                        { evaluacionData.items?.map((item, index) => (
+                                        {
+                                           evaluacionData.items?.map((item, index) => (
                                             <EvaluacionItem key={index} item={item} tipologias={tipologias} handleEditItem={(item) => handleEditItem(item)} handleDeleteItem={(itemId) => handleDeleteItem(itemId)}/>
                                         ))}
                                     </div>  
@@ -238,7 +279,8 @@ export const EvaluacionDetail = ({ evaluacionId, onExit }: EvaluacionDetailProps
                             <div className="flex justify-between">
                                 <h2 className="text-xl font-bold">Urbanización</h2>
                                 <Button 
-                                    className="sm-btn-rounded bg-red-400 text-white" 
+                                    className="sm-btn-rounded bg-red-400 text-white"
+                                    disabled={!hasPendingChanges("urbanizacion")} 
                                     onClick={() => handleSaveUrbanizacion()}
                                 >
                                     <SaveIcon className="h-4 w-4" />

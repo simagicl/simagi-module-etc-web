@@ -1,0 +1,62 @@
+@tailwind utilities;
+
+.sm-text-red {
+    color: #FF5252;
+}
+
+.sm-text-red:hover {
+    color: #FF5252;
+}
+
+.sm-text-blue {
+    color: #66CCFF;
+}
+
+.sm-text-blue:hover {
+    color: #66CCFF;
+}
+
+.sm-text-pink {
+    color: #FF8AE9;
+}
+
+.sm-text-pink:hover {
+    color: #FF8AE9;
+}
+
+.sm-text-purple {
+    color: #8D70FF;
+}
+
+.sm-text-purple:hover {
+    color: #8D70FF;
+}
+
+.sm-text-green {
+    color: #7EFE7C;
+}
+
+.sm-text-green:hover {
+    color: #7EFE7C;
+}
+
+.sm-text-cyan {
+    color: #80FFF0;
+}
+
+.sm-text-cyan:hover {
+    color: #80FFF0;
+}
+
+
+.sm-bg-blue {
+    background: #66CCFF;
+}
+
+.sm-bg-blue:hover {
+    background: #66CCFF;
+}
+
+.sm-bg-blue-2 {
+    background: #48aee1;
+}

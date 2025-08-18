@@ -7,7 +7,7 @@ import {
     DialogFooter,
     DialogClose,
   } from "@/components/ui/dialog"
-  import type { IResumenTipologia } from "@/interfaces/evaluacion.interface"
+  import type { IEvaluacionTipologia } from "@/interfaces/evaluacion.interface"
   import { Button } from "@/components/ui/button"
   import { Input } from "@/components/ui/input"
   import { Label } from "@/components/ui/label"
@@ -17,13 +17,13 @@ import {
       mode: "add" | "edit";
       onClose: () => void;
       onSubmit?: (formData: FormData) => void;
-      data?: IResumenTipologia | null;
+      data?: IEvaluacionTipologia | null;
     }
   
   export interface TipologiaModalMode {
       isOpen: boolean;
       mode: "add" | "edit";
-      data?: IResumenTipologia;
+      data?: IEvaluacionTipologia;
   }
     
     export function TipologiaModal({ isOpen, mode, onClose, onSubmit, data }: TipologiaModalProps) {
@@ -54,7 +54,7 @@ import {
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="cantidad-1">Cantidad</Label>
-                            <Input id="cantidad-1" name="cantidad" type="number" className="border border-gray-300" placeholder="100.0" required defaultValue={data?.cantidad}/>
+                            <Input id="cantidad-1" name="unidad" type="number" className="border border-gray-300" placeholder="100.0" required defaultValue={data?.unidad}/>
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="superficie-1">Superficie [m2]</Label>

@@ -1,8 +1,9 @@
 import axios from "axios"
 import type { IEvaluacion, IEvaluacionBasicInfo } from "@/interfaces/evaluacion.interface"
+import type { IEvaluacionItem } from "@/interfaces/item.interface"
+import type { IEvaluacionTipologia } from "@/interfaces/tipologia.interface"
+import { API_URL, EP_EVALUACIONES, EP_TIPOLOGIAS } from "@/services/consts.service";
 
-const API_URL = "http://localhost:3000/api/v1/"
-const EP_EVALUACIONES = API_URL + "evaluacion"
 
 export const EvaluacionesService = () => {
     console.log("EvaluacionesService")
@@ -71,12 +72,32 @@ export const UpdateEvaluacionBasicInfo = async (evaluacion: IEvaluacionBasicInfo
     }
 }
 
-export const UpdateEvaluacionTipologias = async (evaluacion: IEvaluacion) => {
-    console.log("UpdateEvaluacionTipologiasService", evaluacion)
+export const UpdateEvaluacionTipologias = async (evaluacionId: number, tipologias: IEvaluacionTipologia[]) => {
+    console.log("UpdateEvaluacionTipologiasService", evaluacionId, tipologias)
+    try {
+        const response = await axios.put(EP_EVALUACIONES + "/" + evaluacionId + "/tipologias", {
+            evaluacionId: evaluacionId,
+            tipologias: tipologias
+        })
+        console.log("UpdateEvaluacionTipologiasService - Response", response)
+        return response.data.tipologias
+    }
+    catch (error) {
+        console.log("UpdateEvaluacionTipologiasService - Error", error)
+        return null
+    }
 }
 
-export const UpdateEvaluacionItems = async (evaluacion: IEvaluacion) => {
-    console.log("UpdateEvaluacionItemsService", evaluacion)
+export const DeleteEvaluacionTipologia = async (tipologiaId: number) => {
+    try {
+        const response = await axios.delete(EP_TIPOLOGIAS + "/" + tipologiaId)
+        console.log("DeleteEvaluacionTipologiaService - Response", response)
+        return response.data
+    }
+    catch (error) {
+        console.log("DeleteEvaluacionTipologiaService - Error", error)
+        return null
+    }
 }
 
 export const UpdateEvaluacionUrbanizacion = async (evaluacion: IEvaluacion) => {
@@ -104,6 +125,7 @@ export const getEvaluacionById = async (id: number) => {
             items: response.data.evaluacion.items,
             tipologias: response.data.evaluacion.tipologias
         }
+        console.log("GetEvaluacionByIdService - Response", response)           
         return evaluacion
     } catch (error) {
         console.log("GetEvaluacionByIdService - Error", error)

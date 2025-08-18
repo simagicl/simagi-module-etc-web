@@ -1,13 +1,14 @@
-import type { IEvaluacionItem, IResumenTipologia } from "@/interfaces/evaluacion.interface";
+import type { IEvaluacionItem } from "@/interfaces/item.interface";
+import type { IEvaluacionTipologia } from "@/interfaces/tipologia.interface";
 import { DataTable } from "./dataTable";
 import { Button } from "../ui/button";
 import { useState, useMemo } from "react";
-import { PlusIcon, MinusIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { PlusIcon, MinusIcon, PencilIcon, TrashIcon, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { ItemModal } from "./ItemModal";
 
 interface EvaluacionItemProps {
     item: IEvaluacionItem;
-    tipologias: IResumenTipologia[] | undefined;
+    tipologias: IEvaluacionTipologia[] | undefined;
     handleEditItem?: (item: IEvaluacionItem) => void;
     handleDeleteItem?: (itemId: number) => void;
 }
@@ -27,18 +28,21 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
     };
 
     const tipologiaHeaders = useMemo(() => {
-        const allTipologias = item.subItems.flatMap((item) => item.tipologias ?? []);
-        const unique = Array.from(new Set(allTipologias.map((t) => t.nombre)));
-        return unique;
+        const result = tipologias?.map((tipologia) => {
+          return {id: tipologia.id, nombre: tipologia.nombre};
+          }
+        ) ?? [];
+        return result;
+
       }, [item]);
 
-      const dynamicTipologiaColumns = tipologiaHeaders.map((nombre: string) => ({
-        accessorKey: `tipologia_${nombre}`,
-        header: nombre,
+      const dynamicTipologiaColumns = tipologiaHeaders.map((tipologia) => ({
+        accessorKey: `tipologia_${tipologia.id}_${tipologia.nombre}`,
+        header: tipologia.nombre,
         cell: ({ row }: { row: any }) => {
-          const match = row.original.tipologias?.find((t: any) => t.nombre === nombre);
+          const match = row.original.tipologias?.find((t: any) => t.nombre === tipologia.nombre);
           return match?.valor ?? "-";
-        },
+        } ,
       }));
 
       const columns = useMemo(() => [
@@ -47,6 +51,7 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
         { accessorKey: "nombre", header: "Nombre" },
         { accessorKey: "unidad", header: "Unidad" },
         ...dynamicTipologiaColumns,
+        { accessorKey: "itemTotal", header: "Subtotal" },
       ], [dynamicTipologiaColumns]);
     
     return (
@@ -56,10 +61,10 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
             handleEditItem?.(formData);
             setModalOpen(false);
           }} data={itemData} />
-            <div className={`flex justify-between sm-bg-cyan py-1 px-4 text-gray-800 ${tableOpen ? "rounded-t-lg" : "rounded-lg"}`}>
+            <div className={`flex justify-between sm-bg-blue py-1 px-4 text-gray-100 ${tableOpen ? "rounded-t-lg" : "rounded-lg"}`}>
                 <div className="flex items-center">
-                <Button className="bg-teal-500" onClick={() => setTableOpen(!tableOpen)}>
-                    {tableOpen ? <MinusIcon className="h-4 w-4" /> : <PlusIcon className="h-4 w-4" />}
+                <Button className="sm-bg-blue-2" onClick={() => setTableOpen(!tableOpen)}>
+                    {tableOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                 </Button>
                 </div>
                 <div>
@@ -87,9 +92,9 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
                         ))}     
                     </div>
                 </div>
-                    <div>
+                <div>
                     <p className="text-sm font-bold text-center py-0">Subtotal</p>
-                    <p className="text-sm text-center py-0">{itemData.subItems.reduce((total, subItem) => total + subItem.tipologias.reduce((totalTipologia, tipologia) => totalTipologia + tipologia.valor, 0), 0)} {itemData.unidad}</p>                
+                    <p className="text-sm text-center py-0">{itemData.itemTotal} {itemData.unidad}</p>                
                 </div>
                 <div className="flex items-center flex-row gap-1">
                   <Button className="bg-amber-400" onClick={() => setModalOpen(true)}>
@@ -101,7 +106,7 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
                 </div>
             </div>
             <div className="rounded-b-lg border border-gray-200 p-2" style={{ display: tableOpen ? "block" : "none" }}>
-                <DataTable columns={columns} data={itemData.subItems} pagination={false} />
+                <DataTable columns={columns} data={[]} pagination={false} />
             </div>
         </div>
     )

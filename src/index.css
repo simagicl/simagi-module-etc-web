@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "@/styles/simagi.css";
 @import "@/styles/simagi-components.css";
+@import "@/styles/simagi-colors.css";
 
 @custom-variant dark (&:is(.dark *));
 
