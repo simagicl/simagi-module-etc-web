@@ -1,4 +1,4 @@
-import type { IEvaluacionItem } from "@/interfaces/item.interface";
+import type { IEvaluacionItem, IEvaluacionSubItem } from "@/interfaces/item.interface";
 import type { IEvaluacionTipologia } from "@/interfaces/tipologia.interface";
 import { DataTable } from "./dataTable";
 import { Button } from "../ui/button";
@@ -17,6 +17,8 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
   const [modalOpen, setModalOpen] = useState(false);
     const [tableOpen, setTableOpen] = useState(false);
     const [itemData, setItemData] = useState(item);
+    const [subItems, setSubItems] = useState(item.subItems ?? []);
+    const [subItemId, setSubItemId] = useState(0);
 
     const onEditItem = (item: IEvaluacionItem) => {
         setModalOpen(true);
@@ -54,6 +56,19 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
         { accessorKey: "itemTotal", header: "Subtotal" },
       ], [dynamicTipologiaColumns]);
     
+
+      const handleAddSubItem = () => {
+        const newSubItems = [...subItems, {
+            id: subItemId - 1,
+            orden: subItems.length + 1,
+            nombre: "",
+            unidad: "",
+            tipologias: [],
+        }];
+        setSubItemId(subItemId - 1);
+        setSubItems(newSubItems);
+      }
+
     return (
         <div className="flex flex-col gap-0 p-0 ">
           <ItemModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onSubmit={(formData) => {
@@ -106,7 +121,7 @@ export function EvaluacionItem({ item, tipologias, handleEditItem, handleDeleteI
                 </div>
             </div>
             <div className="rounded-b-lg border border-gray-200 p-2" style={{ display: tableOpen ? "block" : "none" }}>
-                <DataTable columns={columns} data={[]} pagination={false} />
+                <DataTable columns={columns} data={subItems} pagination={false} handleAdd={handleAddSubItem} />
             </div>
         </div>
     )
