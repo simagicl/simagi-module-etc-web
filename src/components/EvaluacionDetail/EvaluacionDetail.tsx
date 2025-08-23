@@ -20,6 +20,7 @@ import {
 } from "@/services/evaluaciones.service";
 
 import { UpdateEvaluacionItems } from "@/services/items.service";
+import { calcSuperficieConstruida } from "./utils";
 
 interface EvaluacionDetailProps {
   evaluacionId: number;
@@ -78,6 +79,11 @@ export const EvaluacionDetail = ({
     );
     if (tipologiasUpdated) {
       setTipologias(tipologiasUpdated);
+      setEvaluacionData({
+        ...evaluacionData,
+        tipologias: tipologiasUpdated,
+        supConstruida: calcSuperficieConstruida(tipologiasUpdated),
+      })
       setIsSaving(false);
       popPendingChanges("tipologias");
     }

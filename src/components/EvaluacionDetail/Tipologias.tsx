@@ -1,5 +1,5 @@
 import { DataTable } from "./dataTable"
-import type { IEvaluacionTipologia } from "@/interfaces/evaluacion.interface"
+import type { IEvaluacionTipologia } from "@/interfaces/tipologia.interface"
 import { useState } from "react"  
 import { Button } from "@/components/ui/button"
 import { TipologiaModal } from "./TipologiaModal";
@@ -38,7 +38,7 @@ export const Tipologias = ({ tipologias, toDelete, hasChanged, onChange }: Tipol
         },
         {
             accessorKey: "valor",
-            header: "Valor [UF]/Unidad",
+            header: "Valor [UF]/[m2]",
         },
         {
             id: "actions",
