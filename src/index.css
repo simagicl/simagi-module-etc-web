@@ -3,6 +3,7 @@
 @import "@/styles/simagi.css";
 @import "@/styles/simagi-components.css";
 @import "@/styles/simagi-colors.css";
+@import "@/styles/simagi-text.css";
 
 @custom-variant dark (&:is(.dark *));
 

@@ -21,6 +21,7 @@ import {
 
 import { UpdateEvaluacionItems } from "@/services/items.service";
 import { calcSuperficieConstruida } from "./utils";
+import { UrbanizacionDetail } from "./Urbanizacion";
 
 interface EvaluacionDetailProps {
   evaluacionId: number;
@@ -448,6 +449,8 @@ export const EvaluacionDetail = ({
                     )}
                   </Button>
                 </div>
+                <UrbanizacionDetail />
+
               </TabsContent>
             </Tabs>
           </div>

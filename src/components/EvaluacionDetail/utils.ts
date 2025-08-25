@@ -1,7 +1,5 @@
 import { type IEvaluacionTipologia } from "@/interfaces/tipologia.interface"
 
-
-
 export function calcSuperficieConstruida(tipologias: IEvaluacionTipologia[]) {
     let sup_construida = 0;
     tipologias.forEach((tipologia) => {
