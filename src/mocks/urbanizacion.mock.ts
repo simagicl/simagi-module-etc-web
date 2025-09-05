@@ -7,7 +7,7 @@ export const urbanizacionMock: IUrbanizacionItem[] = [
         evaluacion_id: 1,
         color: "red",
         nombre: "Urbanización",
-        items: [
+        subItems: [
             {
                 id: 1,
                 urbanizacion_id: 1,
@@ -33,7 +33,7 @@ export const urbanizacionMock: IUrbanizacionItem[] = [
         evaluacion_id: 1,
         color: "blue",
         nombre: "Habilitación",
-        items: [
+        subItems: [
             {
                 id: 1,
                 urbanizacion_id: 1,

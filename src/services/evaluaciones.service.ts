@@ -1,8 +1,7 @@
 import axios from "axios"
 import type { IEvaluacion, IEvaluacionBasicInfo } from "@/interfaces/evaluacion.interface"
-import type { IEvaluacionItem } from "@/interfaces/item.interface"
 import type { IEvaluacionTipologia } from "@/interfaces/tipologia.interface"
-import { API_URL, EP_EVALUACIONES, EP_TIPOLOGIAS } from "@/services/consts.service";
+import { EP_EVALUACIONES, EP_TIPOLOGIAS } from "@/services/consts.service";
 
 
 export const EvaluacionesService = () => {
@@ -43,7 +42,8 @@ export const AddEvaluacion = async (evaluacion: IEvaluacion) => {
         supConstruida: response.data.supConstruida,
         valorTerreno: response.data.valorTerreno,
         items: [],
-        tipologias: []
+        tipologias: [],
+        urbanizacionItems: []
     }
     return newEvaluacion
 }
@@ -63,7 +63,8 @@ export const UpdateEvaluacionBasicInfo = async (evaluacion: IEvaluacionBasicInfo
             supConstruida: response.data.evaluacion.supConstruida,
             valorTerreno: response.data.evaluacion.valorTerreno,
             items: response.data.evaluacion.items,
-            tipologias: response.data.evaluacion.tipologias
+            tipologias: response.data.evaluacion.tipologias,
+            urbanizacionItems: response.data.evaluacion.urbanizacionItems
         }
         return evaluacionUpdated
     } catch (error) {
@@ -123,7 +124,8 @@ export const getEvaluacionById = async (id: number) => {
             supConstruida: response.data.evaluacion.supConstruida,
             valorTerreno: response.data.evaluacion.valorTerreno,
             items: response.data.evaluacion.items,
-            tipologias: response.data.evaluacion.tipologias
+            tipologias: response.data.evaluacion.tipologias,
+            urbanizacionItems: response.data.evaluacion.urbanizacionItems
         }
         console.log("GetEvaluacionByIdService - Response", response)           
         return evaluacion
@@ -137,7 +139,8 @@ export const getEvaluacionById = async (id: number) => {
             supConstruida: 0,
             valorTerreno: 0,
             items: [],
-            tipologias: []
+            tipologias: [],
+            urbanizacionItems: []
         } as IEvaluacion
         return resp
     }

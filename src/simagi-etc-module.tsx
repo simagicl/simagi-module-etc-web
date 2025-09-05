@@ -4,7 +4,6 @@ import { TitleBreadcrumb } from './components/ui/titleBreadcrumb/TitleBreadcrumb
 import { EvaluacionList } from './components/EvaluacionList/EvaluacionList'
 import { EvaluacionDetail } from './components/EvaluacionDetail/EvaluacionDetail'
 import { useState } from 'react'
-import type { IEvaluacion } from '@/interfaces/evaluacion.interface'
 
 const step = {
     list: 1,

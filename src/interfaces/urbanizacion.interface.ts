@@ -3,7 +3,7 @@ export type IUrbanizacionItem = {
     evaluacion_id: number,
     color: string,
     nombre: string,
-    items: IUrbanizacionDetail[]
+    subItems: IUrbanizacionDetail[]
 }
 
 export interface BaseRow {

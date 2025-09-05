@@ -1,5 +1,6 @@
-import { type IEvaluacionTipologia } from "./tipologia.interface";
 import { type IEvaluacionItem } from "./item.interface";
+import { type IEvaluacionTipologia } from "./tipologia.interface";
+import { type IUrbanizacionItem } from "./urbanizacion.interface";
 
 export interface IEvaluacion {
     id: number;
@@ -9,6 +10,7 @@ export interface IEvaluacion {
     supConstruida: number;
     valorTerreno: number;
     tipologias: IEvaluacionTipologia[];
+    urbanizacionItems: IUrbanizacionItem[];
     items: IEvaluacionItem[];
 }
 

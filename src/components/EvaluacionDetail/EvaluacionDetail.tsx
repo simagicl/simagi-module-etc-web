@@ -449,7 +449,7 @@ export const EvaluacionDetail = ({
                     )}
                   </Button>
                 </div>
-                <UrbanizacionDetail />
+                <UrbanizacionDetail urbanizacion={evaluacionData.urbanizacionItems} />
 
               </TabsContent>
             </Tabs>

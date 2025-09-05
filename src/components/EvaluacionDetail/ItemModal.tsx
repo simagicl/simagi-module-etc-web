@@ -7,7 +7,7 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-import type { IEvaluacionItem } from "@/interfaces/evaluacion.interface";
+import type { IEvaluacionItem } from "@/interfaces/item.interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,14 +23,15 @@ export function ItemModal({ isOpen, onClose, onSubmit, data }: ItemModalProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = Object.fromEntries(new FormData(e.currentTarget))
-    const item:IEvaluacionItem = {
+    const item: IEvaluacionItem = {
       ...form,
       id: Number(form.id),
       orden: Number(form.orden),
       identificador: form.identificador as string,
       centroCosto: form.centroCosto as string,
       unidad: form.unidad as string,
-      subItems: data?.subItems || []
+      subItems: data?.subItems || [],
+      itemTotal: data?.itemTotal || 0
     };
     if (!onSubmit) return;
     onSubmit(item);

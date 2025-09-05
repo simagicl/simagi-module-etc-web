@@ -57,7 +57,13 @@ export function UrbaTable<TData, TValue>({
     { accessorKey: "referencia", header: "Referencia" },
     { accessorKey: "cubicacion", header: "Cubicación" },
     { accessorKey: "costoUnitario", header: "Costo Unitario" },
-    { accessorKey: "total", header: "Costo Total" }
+    {
+      id: "total",
+      header: "Subtotal",
+      cell: ({ row }: { row: { original: any } }) => (
+        (row.original.cubicacion || 0) * (row.original.costoUnitario || 0)
+      ),
+    },
   ];
 
   const table = useReactTable({

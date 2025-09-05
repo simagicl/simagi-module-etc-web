@@ -19,7 +19,7 @@ export type UrbanizacionItemProps = {
 
 export const UrbanizacionItem = (props: UrbanizacionItemProps) => {
     const [open, setOpen] = useState(false);
-    
+    console.log("UrbanizacionItem -> Subitems", props.data.subItems);
     return (
         <div className={styles.container}>
             <div className={styles.ItemHeader}>
@@ -39,7 +39,7 @@ export const UrbanizacionItem = (props: UrbanizacionItemProps) => {
                         transition={{ duration: styles.duration, ease: "easeInOut" }}
                         className="origin-top overflow-hidden"
                     >
-                        <UrbaTable data={props.data.items}/>
+                        <UrbaTable data={props.data.subItems}/>
                     </motion.div>
                 )}
             </AnimatePresence>        

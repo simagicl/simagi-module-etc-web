@@ -57,7 +57,8 @@ export const EvaluacionList = ({ title, proceso_id, onEdit, onDelete }: Evaluaci
             supConstruida: Number(formData.get("sup_construida")),
             valorTerreno: Number(formData.get("valor_terreno")),
             items: [],
-            tipologias: []
+            tipologias: [],
+            urbanizacionItems: []
         }
         const result: IEvaluacion = await AddEvaluacion(newEvaluacion)
         setIsLoading(true)

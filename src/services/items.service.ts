@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL, EP_EVALUACIONES, EP_TIPOLOGIAS } from "@/services/consts.service";
+import { EP_EVALUACIONES } from "@/services/consts.service";
 import type { IEvaluacionItem } from "@/interfaces/item.interface";
 
 export const UpdateEvaluacionItems = async (evaluacionId: number, items: IEvaluacionItem[]) => {

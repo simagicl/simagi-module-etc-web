@@ -7,7 +7,7 @@ import {
     DialogFooter,
     DialogClose,
   } from "@/components/ui/dialog"
-  import type { IEvaluacionTipologia } from "@/interfaces/evaluacion.interface"
+  import type { IEvaluacionTipologia } from "@/interfaces/tipologia.interface"
   import { Button } from "@/components/ui/button"
   import { Input } from "@/components/ui/input"
   import { Label } from "@/components/ui/label"
