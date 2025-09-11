@@ -49,6 +49,15 @@ export const UrbanizacionItem = (props: UrbanizacionItemProps) => {
     props.onItemUpdate?.(updated);
   };
 
+  const handleDeleteSubitem = (id: number) => {
+    const updated = {
+      ...itemData,
+      subItems: itemData.subItems.filter((subItem) => subItem.id !== id),
+    };
+    setItemData(updated);
+    props.onItemUpdate?.(updated);
+  };
+
   const handleAddSubitem = () => {
     const newSubItem: IUrbanizacionDetail = {
       id: -1 - itemData.subItems.length,
@@ -145,6 +154,7 @@ export const UrbanizacionItem = (props: UrbanizacionItemProps) => {
               data={itemData.subItems}
               onCellUpdate={onCellUpdate}
               handleAdd={handleAddSubitem}
+              handleDelete={handleDeleteSubitem}
             />
           </motion.div>
         )}

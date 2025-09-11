@@ -131,9 +131,8 @@ export function UrbaTable<TData, TValue>({
     },
   });
 
-  const deleteRow = (id: number) => {
-    console.log("deleteRow", id);
-    handleDelete?.(id);
+  const deleteRow = (row: any) => {
+    handleDelete?.(row.id);
   };
 
   return (
@@ -163,7 +162,7 @@ export function UrbaTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -178,7 +177,7 @@ export function UrbaTable<TData, TValue>({
                   ))}
                   <TableCell className={styles.tableCell}>
                     <Button
-                      onClick={() => deleteRow(index)}
+                      onClick={() => deleteRow(row.original)}
                       className="sm-bg-btn-primary text-white"
                       size="sm">
                       <TrashIcon className="w-5 h-5" />
