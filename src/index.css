@@ -8,6 +8,16 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-sm-red: #FF5252;
+  --color-sm-blue: #66CCFF;
+  --color-sm-pink: #FF8AE9;
+  --color-sm-purple: #8D70FF;
+  --color-sm-cyan: #37d2d6;
+  --color-sm-gray: #c0c0c0;
+  --color-sm-gray-1: #e4e4e4;
+  --color-sm-gray-2: #f5f5f5;
+  --color-sm-gray-3: #c0c0c0;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -120,9 +130,16 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply outline-none;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply border-[1px] border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300;
   }
 }

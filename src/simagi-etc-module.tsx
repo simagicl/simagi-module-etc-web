@@ -1,4 +1,4 @@
-import './simagi-etc-module.css'
+import './index.css'
 import { MainLayout } from './components/layouts/MainLayout'
 import { TitleBreadcrumb } from './components/ui/titleBreadcrumb/TitleBreadcrumb'
 import { EvaluacionList } from './components/EvaluacionList/EvaluacionList'

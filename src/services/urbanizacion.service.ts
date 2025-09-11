@@ -35,3 +35,14 @@ export const getUrbanizaciones = async () => {
     }
 }
 
+export const addUrbanizacionItem = async (item: UrbanizaciónItem) => {
+    try {
+        const response = await axios.post(EP_URBANIZACIONES, item)
+        console.log("AddUrbanizacionItemService - Response", response)
+        return response.data
+    }
+    catch (error) {
+        console.log("AddUrbanizacionItemService - Error", error)
+        return null
+    }
+}
