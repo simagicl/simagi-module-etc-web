@@ -166,15 +166,16 @@ export const EvaluacionDetail = ({
   const pushPendingChanges = (name: string) => {
     setHasChanged(true);
     if (unsaved.includes(name)) return;
-    setUnsaved([...unsaved, name]);
-    console.log("PendingChanges", unsaved);
+    const newUnsaved = [...unsaved, name];
+    setUnsaved(newUnsaved);
+    console.log("PendingChanges", newUnsaved);
   };
 
   const popPendingChanges = (name: string) => {
     let pending = unsaved.filter((item) => item !== name);
     setUnsaved(pending);
     if (pending.length === 0) setHasChanged(false);
-    console.log("PendingChanges", unsaved);
+    console.log("PendingChanges", pending);
   };
 
   const hasPendingChanges = (name: string) => {

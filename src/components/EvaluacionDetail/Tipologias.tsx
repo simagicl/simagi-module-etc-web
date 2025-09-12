@@ -65,7 +65,6 @@ export const Tipologias = ({ tipologias, toDelete, hasChanged, onChange }: Tipol
     ]
 
     const addTipologia = () => {
-        console.log("addTipologia IDX: ", newTipologiaIdx)
         const newTipologias = [...tipologias ?? []]
         newTipologias.push({
             id: newTipologiaIdx,
