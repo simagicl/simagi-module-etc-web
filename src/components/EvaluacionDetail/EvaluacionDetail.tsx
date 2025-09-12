@@ -22,6 +22,7 @@ import {
 import { UpdateEvaluacionItems } from "@/services/items.service";
 import { calcSuperficieConstruida } from "./utils";
 import { UrbanizacionDetail } from "./Urbanizacion";
+import type { IUrbanizacionItem } from "@/interfaces/urbanizacion.interface";
 
 interface EvaluacionDetailProps {
   evaluacionId: number;
@@ -107,14 +108,20 @@ export const EvaluacionDetail = ({
   };
 
   const handleSaveUrbanizacion = () => {
-    console.log("Save Urbanizacion");
-    //onExit?.()
     setIsSaving(true);
     popPendingChanges("urbanizacion");
     setTimeout(() => {
       setIsSaving(false);
     }, 500);
     setHasChanged(false);
+  };
+
+  const handleUpdateUrbanizacion = ( data: IUrbanizacionItem[]) => {
+    setEvaluacionData({
+      ...evaluacionData,
+      urbanizacionItems: data  
+    })
+    pushPendingChanges("urbanizacion");
   };
 
   const handleAddItem = () => {
@@ -449,8 +456,9 @@ export const EvaluacionDetail = ({
                     )}
                   </Button>
                 </div>
-                <UrbanizacionDetail urbanizacion={evaluacionData.urbanizacionItems} />
-
+                <UrbanizacionDetail 
+                urbanizacion={evaluacionData.urbanizacionItems} 
+                onUrbanizacionUpdate={handleUpdateUrbanizacion} />
               </TabsContent>
             </Tabs>
           </div>

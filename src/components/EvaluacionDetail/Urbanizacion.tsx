@@ -5,6 +5,7 @@ import type { IUrbanizacionItem } from "@/interfaces/urbanizacion.interface";
 
 interface UrbanizacionProps {
   urbanizacion: IUrbanizacionItem[];
+  onUrbanizacionUpdate?: (data: IUrbanizacionItem[]) => void;
 }
 
 const styles = {
@@ -14,7 +15,7 @@ const styles = {
   title: "sm-text-md sm-bold text-white",
   collapseBtn: "text-white",
 };
-export const UrbanizacionDetail = ({ urbanizacion }: UrbanizacionProps) => {
+export const UrbanizacionDetail = ({ urbanizacion, onUrbanizacionUpdate  }: UrbanizacionProps) => {
   const [data, setData] = useState(urbanizacion);
 
   const handleAddItem = () => {
@@ -23,6 +24,7 @@ export const UrbanizacionDetail = ({ urbanizacion }: UrbanizacionProps) => {
       evaluacion_id: -1,
       color: "",
       nombre: "",
+      costoItem: 0,
       subItems: [],
     };
     setData([...data, newItem]);
@@ -31,6 +33,7 @@ export const UrbanizacionDetail = ({ urbanizacion }: UrbanizacionProps) => {
   const handleItemUpdate = (item: IUrbanizacionItem) => {
     const newData = data.map((i) => (i.id === item.id ? item : i));
     setData(newData);
+    onUrbanizacionUpdate?.(newData);
   };
 
   return (

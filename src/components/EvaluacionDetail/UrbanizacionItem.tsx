@@ -16,7 +16,7 @@ const styles = {
     "flex gap-2 bg-sm-blue p-2 justify-between items-center [&>div>Button]:text-white",
   headerTitle: "flex items-center gap-2",
   title: "sm-text-md sm-bold text-white",
-  itemTotal: "bg-blue-400 p-1 rounded-sm text-sm text-white",
+  itemTotal: "bg-blue-400 px-2 py-1 rounded-sm text-sm text-white",
   collapseBtn: "text-white bg-transparent hover:bg-blue-400",
   duration: 0.2,
 };
@@ -120,7 +120,7 @@ export const UrbanizacionItem = (props: UrbanizacionItemProps) => {
         <div className="flex gap-4 items-center">
           <div>
             <h2 className={styles.itemTotal}>
-              UF$: {totalItem.toLocaleString()}
+              Total UF$: {totalItem.toLocaleString()}
             </h2>
           </div>
           <div>

@@ -3,6 +3,7 @@ export type IUrbanizacionItem = {
     evaluacion_id: number,
     color: string,
     nombre: string,
+    costoItem: number,
     subItems: IUrbanizacionDetail[]
 }
 
